@@ -73,7 +73,7 @@ double calculator(string algebr)
 		{
 			numbers.push_back(stod(temp_number));
 		}
-		if (algebr[i] != ' ' && (algebr[i] == '+' || algebr[i] == '-' || algebr[i] == '*' || algebr[i] == '/'/* || algebr[i] == '(' || algebr[i] == ')'*/))
+		if (algebr[i] != ' ' && (algebr[i] == '+' || algebr[i] == '-' || algebr[i] == '*' || algebr[i] == '/' || algebr[i] == '(' || algebr[i] == ')'))
 		{
 			symbols.push_back(algebr[i]);
 		}
@@ -85,8 +85,20 @@ double calculator(string algebr)
 	}
 
 	// CHECK
+	int difference = symbols.size() - col_scob;
+	int size = numbers.size();
 
-	if((symbols.size() - col_scob) >= numbers.size() || (error_scobe == true) && col_scob % 2 == 0)
+	if (error_scobe)
+	{
+		cout << "ERROR" << endl;
+		return 0;
+	}
+	if (col_scob % 2 != 0)
+	{
+		cout << "ERROR" << endl;
+		return 0;
+	}
+	if(difference >= size)
 	{
 		cout << "ERROR" << endl;
 		return 0;
@@ -95,8 +107,25 @@ double calculator(string algebr)
 	{
 		return numbers[0];
 	}
-
 	// CHECK
+
+	if (col_scob != 0)
+	{
+		for (int i = 0; i < symbols.size(); i++)
+		{
+			if (algebr[i] == '(')
+			{
+				string temp;
+				i++;
+				for (i; algebr[i] != ')'; i++)
+				{
+					temp += algebr[i];
+				}
+				algebr.erase(algebr.begin()+i);
+			}
+		}
+	}
+
 
 	for (int i = 0; i < symbols.size(); i++)
 	{

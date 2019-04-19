@@ -25,6 +25,11 @@ int main()
 	system("cls");
 	cout << a << " = " << calculator(a) << endl;
 	_getch();
+
+	//string a;
+	//system("cls");
+	//cout << a << " = " << calculator("(12 + 2 * 2) + 3 * 2 + 2") << endl;
+	//_getch();
 }
 
 
@@ -34,7 +39,7 @@ double calculator(string algebr)
 	vector<char> symbols;
 	vector<double> splited_numbers;
 	vector<char> splited_symbols;
-
+	
 	double L_solution = 0;
 	double H_solution = 0;
 
@@ -109,22 +114,49 @@ double calculator(string algebr)
 	}
 	// CHECK
 
+
+	// DYGKI
+	int place_st = 0;
+	int place_end = 0;
+	double temp_number;
 	if (col_scob != 0)
 	{
-		for (int i = 0; i < symbols.size(); i++)
+		for (int i = 0; i < algebr.size(); i++)
 		{
 			if (algebr[i] == '(')
 			{
-				string temp;
+				place_st = i;
+				string temp = " ";
 				i++;
 				for (i; algebr[i] != ')'; i++)
 				{
 					temp += algebr[i];
 				}
-				algebr.erase(algebr.begin()+i);
+					temp_number = calculator(temp);
+				for ( i = place_st; symbols[i]!=')'; i++)
+				{
+					numbers.erase(numbers.begin() + i);
+				}
+				place_end = i;
+				numbers.insert(numbers.begin() + place_st, temp_number);
 			}
 		}
 	}
+
+	for (int i = 0; i < symbols.size(); i++)
+	{
+		if (symbols[i] == '(')
+		{
+				for (; symbols[i] != ')';)
+				{
+					symbols.erase(symbols.begin() + i);
+				}
+				symbols.erase(symbols.begin() + i);
+		}
+	}
+
+	// DYGKI
+
 
 
 	for (int i = 0; i < symbols.size(); i++)
@@ -185,6 +217,7 @@ double calculator(string algebr)
 
 
 	// SPLITTING TO LOW PRIORITTY
+	bool next = true;
 
 	if (symbols.size() > 1)
 	{
@@ -192,13 +225,14 @@ double calculator(string algebr)
 		{
 			if (symbols[i] == '+' || symbols[i] == '-')
 			{
-				splited_numbers.push_back(numbers[i]);
-				if (i == symbols.size() - 2)
+				if (next)
 				{
-					splited_numbers.push_back(numbers[i + 1]);
+					splited_numbers.push_back(numbers[i]);
+					next = false;
 				}
+				splited_numbers.push_back(numbers[i + 1]);
+		
 				splited_symbols.push_back(symbols[i]);
-
 			}
 
 		}
